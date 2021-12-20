@@ -183,8 +183,8 @@ func parseReq(data []byte, req *request) (leftover []byte, err error) {
 			if line == "" {
 				req.head = sdata[len(head)+2 : i+1]
 				i++
-				if clen > 0 {
-					if len(sdata[i:]) < clen {
+				if clen > 0 { // body有数据
+					if len(sdata[i:]) < clen { // 不全
 						break
 					}
 					req.body = sdata[i : i+clen]

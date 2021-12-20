@@ -22,7 +22,7 @@ type conn struct {
 	sa             unix.Sockaddr          // remote socket address 远程socket地址
 	ctx            interface{}            // user-defined context 用户定义的上下文
 	loop           *eventloop             // connected event-loop 所在的事件轮询
-	buffer         []byte                 // reuse memory of inbound data as a temporary buffer 临时缓冲
+	buffer         []byte                 // reuse memory of inbound data as a temporary buffer 临时缓冲, 操作系统从fd读取
 	codec          ICodec                 // codec for TCP
 	opened         bool                   // connection opened event fired
 	localAddr      net.Addr               // local addr

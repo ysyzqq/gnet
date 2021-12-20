@@ -13,10 +13,10 @@ func (svr *server) acceptNewConnection(fd int) error {
 	nfd, sa, err := unix.Accept(fd) // 返回os提供的sock地址和对应的fd
 	if err != nil {
 		if err == unix.EAGAIN {
-			return nil
-		}
 		return err
 	}
+	return nil
+}
 	if err := unix.SetNonblock(nfd, true); err != nil {
 		return err
 	}

@@ -154,6 +154,7 @@ func (el *eventloop) loopWrite(c *conn) error {
 	el.eventHandler.PreWrite()
 
 	head, tail := c.outboundBuffer.LazyReadAll()
+	// 操作系统写进fd里
 	n, err := unix.Write(c.fd, head)
 	if err != nil {
 		if err == unix.EAGAIN {
@@ -161,8 +162,10 @@ func (el *eventloop) loopWrite(c *conn) error {
 		}
 		return el.loopCloseConn(c, err)
 	}
+	// 写入的n, 移除n个
 	c.outboundBuffer.Shift(n)
-
+	// 如果head写完, tail还有, 再把剩余的写进去
+	// 因为是ringbuffer 当read大于write时, 类似[...w(tail), ..., r, ...(head)]
 	if len(head) == n && tail != nil {
 		n, err = unix.Write(c.fd, tail)
 		if err != nil {
